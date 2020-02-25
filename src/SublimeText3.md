@@ -2,8 +2,8 @@
 
 ## 导航
 
-- [ubuntu16.04下sublime text 3之安装和配置](src/SublimeText3/sublime-text-install_ubuntu16.04.5_LST.md)
-- [常用的package](src/SublimeText3/sublime-text-config_sublimetext3.md)
+- [ubuntu16.04下sublime text 3之安装和配置](SublimeText3/sublime-text-install_ubuntu16.04.5_LST.md)
+- [常用的package](SublimeText3/sublime-text-config_sublimetext3.md)
 
 ## 介绍
 

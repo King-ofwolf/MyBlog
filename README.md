@@ -1,5 +1,6 @@
 # kingof-wolf的个人博客
 kingof-wolf's personal Blogs
+[HomePage](https://king-ofwolf.github.io/MyBlog/) "https://king-ofwolf.github.io/MyBlog/"
 
 ## 目录
 
