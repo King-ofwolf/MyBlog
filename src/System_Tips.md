@@ -23,16 +23,20 @@
 ## 版本控制
 
 * 使用git bare仓库（可以使用本机地址作为远程仓库）,详情见[git仓库的bare方式]
-	* 创建控的bare仓库
+	* 创建空的bare仓库
+	
 	```shell script
 	git init --bare
 	```
+	
 	* 根据已有的仓库创建bare仓库
+	
 	```shell script
 	git clone --bare path
 	```
 
 * 精简化的log版本日志
+
 ```shell script
 git log --graph --pretty=oneline --abbrev-commit
 ```
@@ -45,6 +49,7 @@ git log --graph --pretty=oneline --abbrev-commit
 * 使用UPPER_WORD写全局常量，使用CamelCase convention写全局变量
 * 将所有使用到的常量绝对地址放到全局变量或者ini配置文件中，包括数据文件地址等
 * 使用绝对路径替换./相对路径
+
 ```python
 import sys,os
 os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), './')
@@ -56,6 +61,7 @@ os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), './')
 * 使用接口文件重载常用的Dialog函数，如```QtWidgets.QFileDialog.OpenFileNames()```
 * 使用接口文件继承QMainWindow、QWidget、QDialog等常用的窗口框架，声明常用函数，方便后期进行窗口界面的布局改换。
 	* 菜单栏的设定按照字典常量的方式设定，包含名称、图标等参数
+
 ```python
 class Window(QtWidgets.QMainWindow):
 	WorkDoneSignal = QtCore.pyqtSignal(bool)
@@ -69,7 +75,9 @@ class Window(QtWidgets.QMainWindow):
 		self.set_default()
 		self.show()
 ```
+
 * 表格自动改变大小的设定（实测将会无法拖动每列改变宽度，不知道有什么更好的办法）
+
 ```python
 table_viewer.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 table_viewer.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
@@ -78,6 +86,7 @@ table_viewer.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
 ### 系统运行日志
 
 * 添加控制台和文件双重log
+
 ```python
 import logging
 import os
@@ -96,7 +105,9 @@ ch.setFormatter(logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(l
 SysLogger = logging.getLogger('System')
 SysLogger.addHandler(ch)
 ```
+
 * 使用LogReset类重载logger的各项方法，方便将日志重定向到任意位置
+
 ```python
 class LogReset:
 	def __init__(self):
@@ -119,6 +130,7 @@ class LogReset:
 主要是因为PyQt的运行机制是多线程，导致异常无法通过主函数直接进行捕获，因此需要对每一个可能出现异常的函数都加上try except来对异常进行重定向，然而这样会导致代码很复杂，重复工作量太多，因此采用装饰器对需要捕获异常的函数进行修饰。
 
 * 使用装饰器@ExceptionTry对未知和已知的异常进行捕获，装饰器获取相应参数（是否退出，显示状态等）
+
 ```python
 import traceback
 # 构建装饰器
@@ -135,11 +147,13 @@ def ExceptionTry(func):
 				raise e
 	return wrapper
 ```
+
 * 使用常驻的全局异常显示窗口显示异常信息，针对不同参数，设置返回值、处理方式等（exit、continue）
 
 ### 自动编译文件:makefile
 
 * 使用自动化方式判断Python.exe执行路径、位数
+
 ```shell script
 PYTHON_EXEPATH := $(shell where python)
 PYTHON_PATH := $(patsubst %\python.exe,%,$(PYTHON_EXEPATH))
@@ -149,19 +163,25 @@ else
 	PYTHON_DIGIT := x64
 endif
 ```
+
 * 使用dir获取当前路径，并使用-C进行makefile的调用
+
 ```shell script
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 srcdir := $(dir $(mkfile_path))
 $(MAKE) -C $(srcdir)Layout/
 ```
+
 * 使用函数的方式切分各项编译任务
+
 ```shell script
 define build_support_p1
 	echo $1
 endef
 ```
+
 * 针对同一类别的文件，使用同一语句进行编译
+
 ```shell script
 SRC := $(wildcard *_ui.ui)
 OBJ := $(patsubst %.ui, %.py, $(SRC))
@@ -169,6 +189,7 @@ all : $(OBJ)
 %.py:%.ui
 	$(pyuic) $< -o $@
 ```
+
 * makefile行尾不能出现‘\'符号，否则需要在下一行空行（常出现在copy语句最后的路径地址，其实可以省略'\'不写）
 
 ## 系统测试
@@ -176,6 +197,7 @@ all : $(OBJ)
 ### 主测试文件:Test_Main.py
 
 * 使用addTest添加测试用例
+
 ```python
 import unittest
 suite = unittest.TestSuit()
@@ -184,10 +206,12 @@ suite.addTest(loader.loadTestFromModule(PackTest))
 runner = unittest.TextTestRunner(verbosity=2)
 runner.run(suite)
 ```
+
  ### 模块测试文件:Test_*.py
  
  * 一个类对应一个测试用例，各个测试方法之间不能有逻辑的先后关系，也不能有任何的数据交互
  * 测试用例所生成的临时文件和内存需要在测试完成后进行释放（通过tearDownClass）
+ 
  ```python
  import unittest
  class Test(unittest.TestCase):
@@ -204,6 +228,7 @@ runner.run(suite)
 	def test_case1(self):
 		pass
 ```
+
 * 使用TDD方法进行系统开发，使用测试程序驱动开发的进行，先按照需求写测试程序
 * 测试方法先编写判断代码功能的断言语句，然后再编写必要的辅助语句
 
@@ -225,6 +250,7 @@ runner.run(suite)
 
 * 合理使用yield作为函数返回值，构建构造器，可以提高函数执行效率
 * 可以使用协程快速构建多线程任务
+
 ```python
 def gen()
 	count = 0
@@ -240,6 +266,7 @@ def proxy():
 	while True:
 		_result, _msg = yield from gen()
 ```
+
 * tuple和list等集合的空值判断可以通过```bool()```进行，同时兼顾了None值的判断，或者可以直接使用其本身作为bool值也可以，如```if []```
 * ```a == None```的形式最好替换成```a is None```的形式
 * Python支持同时比较大小:```0 < a < 10```
@@ -250,6 +277,7 @@ def proxy():
 	+ 可以使用```sys.getsizeof()```获取绝对字符串内存大小（需要使用减法获取单个字符的绝对大小）
 * bytes类型的数据每个位大小为1byte，str类型的每个位长度由编码方式决定(Latin1 为1byte）
 * 二进制数据数据编码为字符串（长度将加倍）
+
 ```python
 import binascii
 def encode_b2s(b_input):
@@ -257,7 +285,9 @@ def encode_b2s(b_input):
 def decode_s2b(s_input):
 	return binascii.a2b_hex(s_input)
 ```
+
 * 获取hash码
+
 ```python
 import hashlib
 hl = hashlib.md5(sqlt.encode('utf-8'))
