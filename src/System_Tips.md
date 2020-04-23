@@ -25,19 +25,19 @@
 * 使用git bare仓库（可以使用本机地址作为远程仓库）,详情见[git仓库的bare方式]
 	* 创建空的bare仓库
 	
-	```shell script
+	```shell
 	git init --bare
 	```
 	
 	* 根据已有的仓库创建bare仓库
 	
-	```shell script
+	```shell
 	git clone --bare path
 	```
 
 * 精简化的log版本日志
 
-```shell script
+```shell
 git log --graph --pretty=oneline --abbrev-commit
 ```
 
@@ -154,7 +154,7 @@ def ExceptionTry(func):
 
 * 使用自动化方式判断Python.exe执行路径、位数
 
-```shell script
+```shell
 PYTHON_EXEPATH := $(shell where python)
 PYTHON_PATH := $(patsubst %\python.exe,%,$(PYTHON_EXEPATH))
 ifeq ($(findstring Python35-32,%(PYTHON_PATH)), Python35-32)
@@ -166,7 +166,7 @@ endif
 
 * 使用dir获取当前路径，并使用-C进行makefile的调用
 
-```shell script
+```shell
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 srcdir := $(dir $(mkfile_path))
 $(MAKE) -C $(srcdir)Layout/
@@ -174,7 +174,7 @@ $(MAKE) -C $(srcdir)Layout/
 
 * 使用函数的方式切分各项编译任务
 
-```shell script
+```shell
 define build_support_p1
 	echo $1
 endef
@@ -182,7 +182,7 @@ endef
 
 * 针对同一类别的文件，使用同一语句进行编译
 
-```shell script
+```shell
 SRC := $(wildcard *_ui.ui)
 OBJ := $(patsubst %.ui, %.py, $(SRC))
 all : $(OBJ)
